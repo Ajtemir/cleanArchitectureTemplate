@@ -10,7 +10,7 @@ using WebApi.Services;
 namespace WebApi;
 
 // Needs to be public to be accessed from test projects
-public static class Program
+public class Program
 {
     public static async Task Main(string[] args)
     {

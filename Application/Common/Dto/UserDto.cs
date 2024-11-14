@@ -10,5 +10,7 @@ public class UserDto
     public int? BranchId { get; set; }
     public string? Pin { get; set; }
     public string? PhotoBase64 { get; set; }
+    public required string RefreshToken { get; set; }
+    public required string AccessToken { get; set; }
     public IList<string> Roles { get; set; } = new List<string>();
 }

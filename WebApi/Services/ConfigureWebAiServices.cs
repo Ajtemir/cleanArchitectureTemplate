@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using WebApi.Extensions;
+using WebAPI.Extensions;
 using WebApi.Filters;
 
 namespace WebApi.Services;
@@ -14,6 +16,7 @@ public static class ConfigureWebApiServices
         services.AddConfiguredCors();
         services.AddConfiguredControllers();
         services.AddSwaggerDocumentation();
+        services.AddBearerConfigurations();
 
         services.AddApplicationHealthChecks(connectionString);
 
@@ -42,15 +45,6 @@ public static class ConfigureWebApiServices
                     .AllowCredentials();
             });
         });
-
-        return services;
-    }
-    
-    
-    private static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
-    {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
 
         return services;
     }

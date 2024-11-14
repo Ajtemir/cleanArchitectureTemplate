@@ -8,9 +8,7 @@
 
     <ItemGroup>
       <Folder Include="Common\Helpers\" />
-      <Folder Include="Common\MappingProfiles\" />
       <Folder Include="Common\Validators\" />
-      <Folder Include="Users\Commands\" />
     </ItemGroup>
 
     <ItemGroup>

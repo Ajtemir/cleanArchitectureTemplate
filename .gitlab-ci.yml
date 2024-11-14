@@ -1,0 +1,14 @@
+docker-build-master:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - - echo "$DOCKER_IMAGE_VERSION"
+    - docker build -t git.infocom.lan:4567/aulanbekuulu/gosnagrada-backend:$CI_COMMIT_SHORT_SHA .
+    - docker push git.infocom.lan:4567/aulanbekuulu/gosnagrada-backend:$CI_COMMIT_SHORT_SHA
+  only:
+    - remake
+  tags:
+    - gosnagrada-dev.srs.kg

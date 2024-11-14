@@ -22,6 +22,7 @@ public static class ConfigureInfrastructureServices
         services.AddScoped<ApplicationDbContextInitializer>();
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         services.AddScoped<IUserAccountService, UserAccountService>();
+        services.AddScoped<ITokenService, TokenService>();
 
         services.ConfigureExcelExporter();
         
@@ -58,9 +59,11 @@ public static class ConfigureInfrastructureServices
 
         services.ConfigureApplicationCookie(options =>
         {
+            var isRunningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != null;
             options.Cookie.HttpOnly = false;
             options.Cookie.Name = "ukid-api";
-            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SameSite = isRunningInContainer ? SameSiteMode.None : SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = isRunningInContainer ? CookieSecurePolicy.Always : default;
             options.Cookie.MaxAge = TimeSpan.FromDays(2);
             
             // Do not redirect to /account/login, but return 401

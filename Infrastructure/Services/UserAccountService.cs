@@ -30,7 +30,7 @@ public class UserAccountService : IUserAccountService
         {
             throw new BadRequestException("Не удалось выполнить вход с предоставленными учетными данными.");
         }
-
+        
         await _signInManager.SignInAsync(user, true);
         return user;
     }
