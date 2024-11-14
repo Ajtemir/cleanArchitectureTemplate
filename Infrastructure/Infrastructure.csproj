@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="EntityConfigurations\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EPPlus" Version="7.4.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Application\Application.csproj" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Persistence\ApplicationDbContext.DbSets.cs">
+        <DependentUpon>ApplicationDbContext.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Persistence\ApplicationDbContext.OnModelCreating.cs">
+        <DependentUpon>ApplicationDbContext.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Persistence\AllSeeds.cs">
+        <DependentUpon>ApplicationDbContext.OnModelCreating.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Persistence\UserSeed.cs">
+        <DependentUpon>AllSeeds.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
