@@ -39,4 +39,17 @@ public class UserAccountService : IUserAccountService
     {
         await _signInManager.SignOutAsync();
     }
+
+    public async Task<ApplicationUser> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _signInManager.UserManager.Users
+            .Include(x => x.UserRoles)
+            .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken: cancellationToken);
+        if (user == null)
+        {
+            throw new NotFoundException($"Пользователь с идентификатором '{userId}' не существует.");
+        }
+
+        return user;
+    }
 }

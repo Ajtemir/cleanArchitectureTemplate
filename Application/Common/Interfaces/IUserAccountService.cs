@@ -16,4 +16,12 @@ public interface IUserAccountService
     /// Logs the user out and removes the authentication cookie.
     /// </summary>
     Task Logout();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<ApplicationUser> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default);
 }

@@ -18,7 +18,7 @@ public static class BearerTokenExtensions
             .AddAuthentication(
                 options =>
                 {
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,30 +47,6 @@ public static class BearerTokenExtensions
                     IssuerSigningKey = RefreshTokenConfig.GetSymmetricSecurityKey(),
                     ValidateIssuerSigningKey = true,
                 };
-            })
-            .AddCookie(options =>
-            {
-                var isRunningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != null;
-                options.Cookie.HttpOnly = false;
-                options.Cookie.Name = "ukid-api";
-                options.Cookie.SameSite = isRunningInContainer ? SameSiteMode.None : SameSiteMode.Lax;
-                options.Cookie.SecurePolicy = isRunningInContainer ? CookieSecurePolicy.Always : default;
-                options.Cookie.MaxAge = TimeSpan.FromDays(2);
-            
-                // Do not redirect to /account/login, but return 401
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.Headers["Location"] = context.RedirectUri;
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return Task.CompletedTask;
-                };
-
-                options.Events.OnRedirectToAccessDenied = context =>
-                {
-                    context.Response.Headers["Location"] = context.RedirectUri;
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    return Task.CompletedTask;
-                };   
             })
             ;
     }
