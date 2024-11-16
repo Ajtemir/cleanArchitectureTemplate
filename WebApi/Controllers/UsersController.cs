@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml.Packaging.Ionic.Zip;
 using Ukid.Domain.Enums;
 
 namespace WebApi.Controllers;
 
-[Authorize(Roles = nameof(DomainRole.Administrator))]
-[Authorize(AuthenticationSchemes = RefreshTokenConfig.SchemeName)]
+[Authorize(AuthenticationSchemes=$"{RefreshTokenConfig.SchemeName}, {JwtBearerDefaults.AuthenticationScheme}",Roles = nameof(DomainRole.Administrator))]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public partial class UsersController : ApiControllerBase
 {
@@ -37,13 +37,13 @@ public partial class UsersController : ApiControllerBase
     [HttpPost("refresh-access-token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(AuthenticationSchemes = RefreshTokenConfig.SchemeName)]
     public async Task<ActionResult<AccessTokenDto>> RefreshAccessToken()
     {
         RefreshAccessTokenCommand request = new()
         {
             UserId = int.Parse(User.Identity?.Name ?? throw new BadHttpRequestException("User id not found")),
         };
+        var refreshToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault() ?? throw new BadReadException("Refresh token not found");
         var user = await Mediator.Send(request);
         return user;
     }

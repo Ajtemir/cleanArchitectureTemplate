@@ -44,6 +44,7 @@ public class UserAccountService : IUserAccountService
     {
         var user = await _signInManager.UserManager.Users
             .Include(x => x.UserRoles)
+            .ThenInclude(x=>x.Role)
             .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken: cancellationToken);
         if (user == null)
         {

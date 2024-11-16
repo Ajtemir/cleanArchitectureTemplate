@@ -16,6 +16,8 @@ namespace Domain.Constants
         public const string UserIdClaim = ClaimTypes.Name;
         public const string UserRoleClaim = ClaimTypes.Role;
         public static readonly Func<ApplicationUser, string> GetPropertyAsIdentifier = user => user.Id.ToString();
+        public static readonly Func<ApplicationUser, List<string?>> GetPropertyAsRoles = user => user.UserRoles.Select(x=>x.Role.Name).ToList();
+
         public static SymmetricSecurityKey GetSymmetricSecurityKey() => new (Encoding.ASCII.GetBytes(Key));
         
     }

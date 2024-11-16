@@ -33,15 +33,17 @@ public class TokenService : ITokenService
     public string GetRefreshToken(ApplicationUser user)
     {
         var now = DateTime.UtcNow;
+        var claims = new List<Claim>();
+        var roles = RefreshTokenConfig.GetPropertyAsRoles(user)
+            .Select(x => new Claim(RefreshTokenConfig.UserRoleClaim, x)).ToList();
+        var idClaim = new Claim(RefreshTokenConfig.UserIdClaim, RefreshTokenConfig.GetPropertyAsIdentifier(user));
+        claims.Add(idClaim);
+        claims.AddRange(roles);
         var jwt = new JwtSecurityToken(
             issuer: RefreshTokenConfig.Issuer,
             audience: RefreshTokenConfig.Audience,
             notBefore: now,
-            claims: new List<Claim>
-            {
-                new (RefreshTokenConfig.UserIdClaim, RefreshTokenConfig.GetPropertyAsIdentifier(user)),
-                new (RefreshTokenConfig.UserRoleClaim, ""),
-            },
+            claims: claims,
             expires: now.Add(TimeSpan.FromMinutes(RefreshTokenConfig.LifetimeInMinutes)),
             signingCredentials: new SigningCredentials(RefreshTokenConfig.GetSymmetricSecurityKey(), RefreshTokenConfig.Algorithm));
         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
